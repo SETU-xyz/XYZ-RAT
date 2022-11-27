@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/rootuserdj/XYZ-RAT/blob/main/XYZ RAT/server/assets/webpublic/logo.png" height="60"><br>
+<img src="https://github.com/SETU-xyz/XYZ-RAT/raw/main/XYZ%20RAT/server/assets/webpublic/logo.png" height="60"><br>
 Cracked of real <a href="https://github.com/D3VL/L3MON">L3MON</a> a cloud based remote android managment suite for termux, powered by NodeJS
 </p>
 
